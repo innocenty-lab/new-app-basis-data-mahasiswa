@@ -5,17 +5,21 @@ import com.enigmacamp.student.util.Error;
 import com.enigmacamp.student.util.ErrorResponse;
 import com.enigmacamp.student.util.ResponseStatus;
 import com.enigmacamp.student.util.SuccessResponse;
+import com.enigmacamp.student.validation.MaxDataValidation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentRepositoryImpl implements StudentRepository {
     private List<Student> studentList = new ArrayList<>();
-    private int maxData;
-
-    public StudentRepositoryImpl(int maxData) {
-        this.maxData = maxData;
-    }
+    @Autowired
+    MaxDataValidation maxDataValidation;
+//    private int maxData;
+//
+//    public StudentRepositoryImpl(int maxData) {
+//        this.maxData = maxData;
+//    }
 
 //    @Override
 //    public void add(Student student) {
@@ -47,7 +51,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public ResponseStatus add(Student student) {
-        if (studentList.size() < maxData) {
+        if (studentList.size() < maxDataValidation.getMaxData()) {
             studentList.add(student);
             return new SuccessResponse();
         }

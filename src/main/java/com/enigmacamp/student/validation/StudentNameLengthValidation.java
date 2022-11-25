@@ -10,14 +10,25 @@ public class StudentNameLengthValidation implements Validation {
     private int minLen;
     private int maxLen;
 
-    public StudentNameLengthValidation(int minLen, int maxLen) {
-        this.minLen = minLen;
-        this.maxLen = maxLen;
-    }
-
     @Override
     public ResponseStatus test(Student s) {
         if (s.getFullName().length() >= minLen && s.getFullName().length() <= maxLen) return new SuccessResponse();
         return new ErrorResponse(Error.INVALID_LENGTH_NAME);
+    }
+
+    public int getMinLen() {
+        return minLen;
+    }
+
+    public void setMinLen(int minLen) {
+        this.minLen = minLen;
+    }
+
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(int maxLen) {
+        this.maxLen = maxLen;
     }
 }

@@ -3,24 +3,29 @@ package com.enigmacamp.student.service;
 import com.enigmacamp.student.model.Student;
 import com.enigmacamp.student.repository.StudentRepository;
 import com.enigmacamp.student.util.ResponseStatus;
+import com.enigmacamp.student.validation.MaxDataValidation;
+import com.enigmacamp.student.validation.StudentAgeValidation;
+import com.enigmacamp.student.validation.StudentNameLengthValidation;
 import com.enigmacamp.student.validation.Validation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
-    private Validation ageValidation;
-    private Validation nameLengthValidation;
+
+    @Autowired
+    StudentAgeValidation studentAgeValidation;
+    @Autowired
+    StudentNameLengthValidation studentNameLengthValidation;
 
     // tanpa response status dan validation
 //    public StudentServiceImpl(StudentRepository studentRepository) {
 //        this.studentRepository = studentRepository;
 //    }
 
-    public StudentServiceImpl(StudentRepository studentRepository, Validation ageValidation, Validation nameLengthValidation) {
+    public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.ageValidation = ageValidation;
-        this.nameLengthValidation = nameLengthValidation;
     }
 
 
@@ -54,10 +59,10 @@ public class StudentServiceImpl implements StudentService {
     // dengan response status dan validatiom
     @Override
     public boolean registerStudent(Student newStudent) {
-        ResponseStatus ageStatus = this.ageValidation.test(newStudent);
+        ResponseStatus ageStatus = studentAgeValidation.test(newStudent);
         if (!ageStatus.isValid()) return ageStatus.isValid();
 
-        ResponseStatus nameLenStatus = this.nameLengthValidation.test(newStudent);
+        ResponseStatus nameLenStatus = studentNameLengthValidation.test(newStudent);
         if (!nameLenStatus.isValid()) return nameLenStatus.isValid();
 
         ResponseStatus registerStatus = studentRepository.add(newStudent);
